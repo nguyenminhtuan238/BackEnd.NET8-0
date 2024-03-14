@@ -1,6 +1,6 @@
 ﻿using ProjectCV.Server.Models;
 
-namespace ProjectCV.Server.IServices
+namespace ProjectCV.Server.IServices.IAccountservices
 {
     public interface ILoginServicescs
     {

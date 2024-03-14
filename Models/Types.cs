@@ -1,8 +1,8 @@
 ﻿namespace ProjectCV.Server.Models
 {
-    public class CVModel
+    public class Types
     {
         public int Id { get; set; }
-        public string ?Name { get; set; }
+        public string ?NameType { get; set; }
     }
 }

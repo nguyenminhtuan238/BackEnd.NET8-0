@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using ProjectCV.Server.DB;
-using ProjectCV.Server.IServices;
+using ProjectCV.Server.IServices.IAccountservices;
 using ProjectCV.Server.Models;
 
-namespace ProjectCV.Server.Services
+namespace ProjectCV.Server.Services.AccountServices
 {
-    public class RegisterServices: IRegisterServices
+    public class RegisterServices : IRegisterServices
     {
         private readonly IUserServices _userServices;
         private readonly DBSetting _dBSetting;
-        public RegisterServices(IUserServices userServices,DBSetting dBSetting) { 
+        public RegisterServices(IUserServices userServices, DBSetting dBSetting)
+        {
             _dBSetting = dBSetting;
             _userServices = userServices;
         }

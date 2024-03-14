@@ -2,7 +2,7 @@
 using ProjectCV.Server.Models;
 using System.Security.Claims;
 
-namespace ProjectCV.Server.IServices
+namespace ProjectCV.Server.IServices.IAccountservices
 {
     public interface IJwtServices
     {

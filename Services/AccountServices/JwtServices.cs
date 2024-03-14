@@ -2,16 +2,16 @@
 using Microsoft.IdentityModel.Tokens;
 using ProjectCV.Server.DB;
 using ProjectCV.Server.Helpers;
-using ProjectCV.Server.IServices;
+using ProjectCV.Server.IServices.IAccountservices;
 using ProjectCV.Server.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ProjectCV.Server.Services
+namespace ProjectCV.Server.Services.AccountServices
 {
-    public class JwtServices: IJwtServices
+    public class JwtServices : IJwtServices
     {
         private readonly DBSetting _dBSetting;
         private readonly IConfiguration _config;
@@ -22,7 +22,7 @@ namespace ProjectCV.Server.Services
         }
         public async Task<TokenHelpers> GenerateRefreshToken(string username)
         {
-           return await GenerateJSONWebToken(username);
+            return await GenerateJSONWebToken(username);
         }
         public virtual async Task<TokenHelpers> GenerateJSONWebToken(string userName)
         {
@@ -32,8 +32,10 @@ namespace ProjectCV.Server.Services
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
                 var ketqua = await _dBSetting.User.SingleOrDefaultAsync(x => x.Username == userName);
                 var claims = new[] {
-                new Claim("UserID", ketqua.Id.ToString()),
-                 new Claim(ClaimTypes.Role, ketqua.IsAdmin?"Admin":"User") };
+                new Claim(ClaimTypes.NameIdentifier, ketqua.Id.ToString()),
+                 new Claim(ClaimTypes.Role, ketqua.IsAdmin?"Admin":"User"),
+
+                };
                 var tokenDescriptor = new JwtSecurityToken(_config["Jwt:Issuer"],
                   _config["Jwt:Issuer"],
                  claims,
@@ -41,22 +43,23 @@ namespace ProjectCV.Server.Services
                   signingCredentials: credentials);
                 var token = new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
                 var refreshToken = GenerateRefreshToken();
-               
-                
+
+
                 return new TokenHelpers { Access_Token = token, Refresh_Token = refreshToken }; ;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return null;
             }
         }
-        
+
         public string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(randomNumber);
-               
+
                 return Convert.ToBase64String(randomNumber);
             }
         }

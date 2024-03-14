@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ProjectCV.Server.DB;
-using ProjectCV.Server.IServices;
+using ProjectCV.Server.IServices.IAccountservices;
 using ProjectCV.Server.Models;
-using ProjectCV.Server.Services;
 
 namespace ProjectCV.Server.Controllers
 {
@@ -18,14 +17,12 @@ namespace ProjectCV.Server.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserServices _context;
-        private readonly ILoginServicescs _loginServicescs;
-        private readonly IRegisterServices _registerServices;
+   
 
-        public UsersController(IUserServices context, ILoginServicescs loginServicescs, IRegisterServices registerServices)
+        public UsersController(IUserServices context)
         {
             _context = context;
-            _loginServicescs = loginServicescs;
-            _registerServices = registerServices;
+          
         }
 
         //// GET: api/Users
@@ -85,25 +82,14 @@ namespace ProjectCV.Server.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public  ActionResult<object> Get()
+        public  async  Task<object> Get()
         {
-            return new { success=false };
+            var result= await _context.GetAll();
+            return Ok(new { result,id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        });
         }
-        [HttpPost("Login")]
-        public async Task<ActionResult<object>> Login(User user)
-        {
-            try
-            {
-                return await _loginServicescs.Login(user);
-            }catch (Exception ex) {
-                return ex;
-            }
-        }
-        [HttpPost("Register")]
-        public async Task<ActionResult<object>> Register(User user)
-        {
-            return await _registerServices.Register(user); 
-        }
+       
+      
 
         // DELETE: api/Users/5
         //[HttpDelete("{id}")]

@@ -1,17 +1,18 @@
 ﻿using ProjectCV.Server.DB;
-using ProjectCV.Server.IServices;
+using ProjectCV.Server.IServices.IAccountservices;
 using ProjectCV.Server.Models;
 
-namespace ProjectCV.Server.Services
+namespace ProjectCV.Server.Services.AccountServices
 {
-    public class LoginServicescs:ILoginServicescs
+    public class LoginServicescs : ILoginServicescs
     {
         private readonly IUserServices _userServices;
         private readonly IJwtServices _jwtServices;
-        public LoginServicescs(IUserServices userServices,IJwtServices jwtServices) {
+        public LoginServicescs(IUserServices userServices, IJwtServices jwtServices)
+        {
             _userServices = userServices;
             _jwtServices = jwtServices;
-        
+
         }
         public virtual async Task<object> Login(User user)
         {

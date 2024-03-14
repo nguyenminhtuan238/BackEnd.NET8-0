@@ -2,8 +2,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProjectCV.Server.DB;
-using ProjectCV.Server.IServices;
-using ProjectCV.Server.Services;
+using ProjectCV.Server.IServices.IAccountservices;
+using ProjectCV.Server.IServices.INoteServices;
+using ProjectCV.Server.IServices.ITypeServices;
+using ProjectCV.Server.Services.AccountServices;
+using ProjectCV.Server.Services.NoteServices;
+using ProjectCV.Server.Services.TypeServices;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +24,9 @@ builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IJwtServices, JwtServices>();
 builder.Services.AddScoped<ILoginServicescs, LoginServicescs>();
 builder.Services.AddScoped<IRegisterServices, RegisterServices>();
+builder.Services.AddScoped<IResetPasswordServices, ResetPasswordServices>();
+builder.Services.AddScoped<ITypeServices, TypeServices>();
+builder.Services.AddScoped<INoteServices,NoteServices>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
    .AddJwtBearer(options =>
    {
